@@ -1,0 +1,15 @@
+{
+  "name": "faxette",
+  "description": "Send a fax from your coding agent with Faxette.",
+  "owner": {
+    "name": "Faxette",
+    "email": "support@faxette.com"
+  },
+  "plugins": [
+    {
+      "name": "faxette",
+      "source": "./plugins/faxette",
+      "description": "Send a fax: your agent finds the official fax number, uploads your files and gives you a link to check the fax and pay."
+    }
+  ]
+}

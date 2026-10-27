@@ -1,0 +1,20 @@
+{
+  "name": "faxette",
+  "interface": {
+    "displayName": "Faxette"
+  },
+  "plugins": [
+    {
+      "name": "faxette",
+      "source": {
+        "source": "local",
+        "path": "./plugins/faxette"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}
