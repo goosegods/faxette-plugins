@@ -3,6 +3,10 @@
     "faxette": {
       "type": "http",
       "url": "https://mcp.faxette.com/mcp"
+    },
+    "faxette-eu": {
+      "type": "http",
+      "url": "https://mcp.eu.faxette.com/mcp"
     }
   }
 }

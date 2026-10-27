@@ -1,17 +1,17 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
-  "name": "com.faxette/faxette",
-  "title": "Faxette",
-  "description": "Send a fax from a chat. The person checks it and pays per fax on Faxette's status page.",
+  "name": "com.faxette/faxette-eu",
+  "title": "Faxette EU",
+  "description": "Send a fax to the EU, Norway, Iceland or Liechtenstein from a chat. Pay per fax on Faxette.",
   "version": "0.1.0",
-  "websiteUrl": "https://www.faxette.com/mcp",
+  "websiteUrl": "https://eu.faxette.com/mcp",
   "repository": {
     "url": "https://github.com/goosegods/faxette-plugins",
     "source": "github"
   },
   "icons": [
     {
-      "src": "https://www.faxette.com/icon.png",
+      "src": "https://eu.faxette.com/icon.png",
       "mimeType": "image/png",
       "sizes": [
         "180x180"
@@ -21,7 +21,7 @@
   "remotes": [
     {
       "type": "streamable-http",
-      "url": "https://mcp.faxette.com/mcp"
+      "url": "https://mcp.eu.faxette.com/mcp"
     }
   ]
 }

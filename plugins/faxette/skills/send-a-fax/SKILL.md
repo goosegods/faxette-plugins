@@ -5,7 +5,12 @@ description: Send a fax with Faxette to the US, Canada, the EU, Norway, Iceland 
 
 # Send a fax with Faxette
 
-Faxette's tools, `create_document`, `create_fax` and `get_fax_status`, come from the Faxette MCP server in this plugin. The person pays on Faxette's status page, never in this chat. Faxette faxes to the US, Canada, the EU, Norway, Iceland and Liechtenstein.
+This plugin has two Faxette MCP servers with the same tools, `create_document`, `create_fax` and `get_fax_status`. Use the one that covers the fax number's country for every step of that fax:
+
+- `faxette` for the US and Canada
+- `faxette-eu` for the EU, Norway, Iceland and Liechtenstein
+
+Faxette doesn't fax anywhere else yet. The person pays on Faxette's status page, never in this chat.
 
 ## 1. Find and confirm the fax number
 
@@ -47,7 +52,7 @@ Never say a fax is sent or paid until `get_fax_status` says so.
 
 ## 5. Check on it
 
-Call `get_fax_status` with the `status_url` only when the person asks, or at most once a minute while the fax is sending.
+Call `get_fax_status` on the same server, with the `status_url`, only when the person asks, or at most once a minute while the fax is sending.
 
 - `document_errors` lists files Faxette couldn't use. Tell the person what's wrong; they fix it on the status page.
 - `checkout_available: true` means the person can pay on the status page.

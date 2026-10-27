@@ -4,6 +4,10 @@
     "faxette": {
       "type": "streamable-http",
       "url": "https://mcp.faxette.com/mcp"
+    },
+    "faxette-eu": {
+      "type": "streamable-http",
+      "url": "https://mcp.eu.faxette.com/mcp"
     }
   }
 }

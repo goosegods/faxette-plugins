@@ -1,6 +1,6 @@
 # Faxette plugins
 
-Send a fax from Claude Code or Codex. The plugin adds Faxette's MCP server and a `send-a-fax` skill: your agent finds the official fax number, uploads your files and gives you a link to Faxette's status page, where you check the fax and pay to send it. You pay per fax, with no account or subscription.
+Send a fax from Claude Code or Codex. The plugin adds Faxette's two MCP servers, one for each copy of Faxette, and a `send-a-fax` skill: your agent finds the official fax number, uploads your files and gives you a link to Faxette's status page, where you check the fax and pay to send it. You pay per fax, with no account or subscription.
 
 Faxette faxes to the US, Canada, the EU, Norway, Iceland and Liechtenstein.
 
@@ -23,13 +23,14 @@ Then open `/plugins` in Codex, switch to the Faxette marketplace and install Fax
 
 Then ask, for example: "Please fax referral.pdf to Dr. Lee's office."
 
-## Only the connector
+## Only the connectors
 
-Claude, ChatGPT and other MCP clients can connect to the server directly, without the skill:
+Claude, ChatGPT and other MCP clients can connect directly, without the skill. Each connector faxes to its own copy's countries:
 
-```
-https://mcp.faxette.com/mcp
-```
+| Connector | Faxes to |
+| --- | --- |
+| `https://mcp.faxette.com/mcp` | the US and Canada |
+| `https://mcp.eu.faxette.com/mcp` | the EU, Norway, Iceland and Liechtenstein |
 
 Setup steps for each app are on [faxette.com/mcp](https://www.faxette.com/mcp).
 
@@ -38,11 +39,11 @@ Setup steps for each app are on [faxette.com/mcp](https://www.faxette.com/mcp).
 | Path | What it is |
 | --- | --- |
 | `plugins/faxette/skills/send-a-fax/SKILL.md` | How the agent finds the number, uploads files and hands over the status page |
-| `plugins/faxette/.mcp.json` | The MCP server, for Claude Code |
+| `plugins/faxette/.mcp.json` | The two MCP servers, for Claude Code |
 | `plugins/faxette/mcp.json`, `plugin.json` | The same plugin in the Agent Plugins format, for Codex |
 | `.claude-plugin/marketplace.json` | The Claude Code marketplace |
 | `.agents/plugins/marketplace.json` | The Codex marketplace |
-| `server.json` | The server's entry in the [MCP Registry](https://registry.modelcontextprotocol.io) |
+| `registry/us/server.json`, `registry/eu/server.json` | Each server's entry in the [MCP Registry](https://registry.modelcontextprotocol.io) |
 
 ## Tools
 
@@ -64,11 +65,12 @@ Nothing is sent or charged from the chat. The person pays on the status page, wh
 
 Bump `version` in both `plugin.json` files when the plugin changes.
 
-`server.json` lists the server in the MCP Registry as `com.faxette/faxette`. Bump its `version` with the server's, then publish. The `com.faxette/*` name is proven with a DNS TXT record on `faxette.com` ([how](https://modelcontextprotocol.io/registry/authentication.md#dns-authentication)):
+The servers are listed in the MCP Registry as `com.faxette/faxette` and `com.faxette/faxette-eu`. Bump `version` in both `registry/*/server.json` files with the server's, then publish each. The `com.faxette/*` names are proven with a DNS TXT record on `faxette.com` ([how](https://modelcontextprotocol.io/registry/authentication.md#dns-authentication)):
 
 ```sh
 mcp-publisher login dns --domain faxette.com --private-key <key>
-mcp-publisher publish
+(cd registry/us && mcp-publisher publish)
+(cd registry/eu && mcp-publisher publish)
 ```
 
 ## License
