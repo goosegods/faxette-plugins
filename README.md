@@ -2,7 +2,7 @@
 
 Send a fax from Claude Code or Codex. The plugin adds Faxette's two MCP servers, one for each copy of Faxette, and a `send-a-fax` skill: your agent finds the official fax number, uploads your files and gives you a link to Faxette's status page, where you check the fax and pay to send it. You pay per fax, with no account or subscription.
 
-Faxette faxes to the US, Canada, the EU, Norway, Iceland and Liechtenstein.
+Faxette faxes to the US, Canada, the EU, the UK, Switzerland, Norway, Iceland, Liechtenstein, Monaco, Montenegro, Ukraine and the Isle of Man.
 
 ## Install
 
@@ -30,7 +30,7 @@ Claude, ChatGPT and other MCP clients can connect directly, without the skill. E
 | Connector | Faxes to |
 | --- | --- |
 | `https://mcp.faxette.com/mcp` | the US and Canada |
-| `https://mcp.eu.faxette.com/mcp` | the EU, Norway, Iceland and Liechtenstein |
+| `https://mcp.eu.faxette.com/mcp` | the EU, the UK, Switzerland, Norway, Iceland, Liechtenstein, Monaco, Montenegro, Ukraine and the Isle of Man |
 
 Setup steps for each app are on [faxette.com/mcp](https://www.faxette.com/mcp).
 

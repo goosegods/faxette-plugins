@@ -1,6 +1,6 @@
 ---
 name: send-a-fax
-description: Send a fax with Faxette to the US, Canada, the EU, Norway, Iceland or Liechtenstein, or check on one. Use when the person asks to fax a document or form, or asks how a Faxette fax is doing.
+description: Send a fax with Faxette to the US, Canada, the EU, the UK, Switzerland or elsewhere in Europe, or check on one. Use when the person asks to fax a document or form, or asks how a Faxette fax is doing.
 ---
 
 # Send a fax with Faxette
@@ -8,7 +8,7 @@ description: Send a fax with Faxette to the US, Canada, the EU, Norway, Iceland 
 This plugin has two Faxette MCP servers with the same tools, `create_document`, `create_fax` and `get_fax_status`. Use the one that covers the fax number's country for every step of that fax:
 
 - `faxette` for the US and Canada
-- `faxette-eu` for the EU, Norway, Iceland and Liechtenstein
+- `faxette-eu` for the EU, the UK, Switzerland, Norway, Iceland, Liechtenstein, Monaco, Montenegro, Ukraine and the Isle of Man
 
 Faxette doesn't fax anywhere else yet. The person pays on Faxette's status page, never in this chat.
 
