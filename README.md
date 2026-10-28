@@ -1,6 +1,6 @@
 # Faxette plugins
 
-Send a fax from Claude Code or Codex. The plugin adds Faxette's two MCP servers, one for each copy of Faxette, and a `send-a-fax` skill: your agent finds the official fax number, uploads your files and gives you a link to Faxette's status page, where you check the fax and pay to send it. You pay per fax, with no account or subscription.
+Send a fax from Claude Code or Codex. The plugin adds Faxette's two MCP servers, one for each copy of Faxette, and a `send-a-fax` skill: your agent finds the official fax number, uploads your files and gives you a link to Faxette's status page, where you check the fax and pay to send it. You pay per fax, with no subscription. You don't need an account; if you have one, sign in when your app asks and your faxes stay in it.
 
 Faxette faxes to the US, Canada, the EU, the UK, Switzerland, Norway, Iceland, Liechtenstein, Monaco, Montenegro, Ukraine and the Isle of Man.
 
@@ -52,6 +52,11 @@ Setup steps for each app are on [faxette.com/mcp](https://www.faxette.com/mcp).
 | `create_document` | Reserves an upload for one file (PDF, JPG, PNG, WEBP or HEIC, up to 20 MB) and returns a URL to PUT it to |
 | `create_fax` | Creates the fax and returns its `status_url`, where the person checks it and pays |
 | `get_fax_status` | Reads a fax from its `status_url`: status, pages, price, payment and attempts |
+| `get_account` | Shows which Faxette account is signed in. Needs sign-in |
+| `get_faxes` | Lists the account's faxes, 25 at a time, newest first, with a status filter. Needs sign-in |
+| `get_fax` | One of the account's faxes, with its documents' file names and history. Needs sign-in |
+
+Signing in is optional. The connector asks your app to sign you in the first time a tool needs it, through your copy of Faxette (`www.faxette.com` or `eu.faxette.com`). Disconnect an app any time in Settings → Connected apps.
 
 Nothing is sent or charged from the chat. The person pays on the status page, which shows the fax number, documents and price first.
 

@@ -1,16 +1,18 @@
 ---
 name: send-a-fax
-description: Send a fax with Faxette to the US, Canada, the EU, the UK, Switzerland or elsewhere in Europe, or check on one. Use when the person asks to fax a document or form, or asks how a Faxette fax is doing.
+description: Send a fax with Faxette to the US, Canada, the EU, the UK, Switzerland or elsewhere in Europe, or check on one. Use when the person asks to fax a document or form, asks how a Faxette fax is doing, or asks about faxes they've sent.
 ---
 
 # Send a fax with Faxette
 
-This plugin has two Faxette MCP servers with the same tools, `create_document`, `create_fax` and `get_fax_status`. Use the one that covers the fax number's country for every step of that fax:
+This plugin has two Faxette MCP servers with the same tools. Use the one that covers the fax number's country for every step of that fax:
 
 - `faxette` for the US and Canada
 - `faxette-eu` for the EU, the UK, Switzerland, Norway, Iceland, Liechtenstein, Monaco, Montenegro, Ukraine and the Isle of Man
 
 Faxette doesn't fax anywhere else yet. The person pays on Faxette's status page, never in this chat.
+
+Sending a fax doesn't need an account. People with a Faxette account can sign in so their faxes stay in it: `get_account`, `get_faxes` and `get_fax` need that, and calling one while they aren't signed in asks your app to sign them in. Accounts belong to one server: an account on `faxette` doesn't work on `faxette-eu`.
 
 ## 1. Find and confirm the fax number
 
@@ -20,7 +22,7 @@ If a form needs a handwritten signature, tell the person to print, sign and scan
 
 ## 2. Ask for their email
 
-Ask the person for the email address where Faxette sends the receipt and updates. Never guess it.
+If the person is signed in, Faxette uses their account's email: don't ask, and leave `email` out of `create_fax`. Otherwise ask for the email address where Faxette sends the receipt and updates. Never guess it.
 
 ## 3. Upload each file
 
@@ -46,17 +48,21 @@ If you can't read the files, skip this step and tell the person they'll add thei
 
 ## 4. Start the fax
 
-Call `create_fax` with the fax number, the email and the `document_id`s in order. Give the person the `status_url`. They check the fax number, documents and price there, and pay to send it. Nothing is sent or charged until they do.
+Call `create_fax` with the fax number, the email (unless they're signed in) and the `document_id`s in order. Give the person the `status_url`. They check the fax number, documents and price there, and pay to send it. Nothing is sent or charged until they do.
 
-Never say a fax is sent or paid until `get_fax_status` says so.
+Never say a fax is sent or paid until `get_fax_status` or `get_fax` says so.
 
 ## 5. Check on it
 
-Call `get_fax_status` on the same server, with the `status_url`, only when the person asks, or at most once a minute while the fax is sending.
+Call `get_fax_status` on the same server, with the `status_url`, only when the person asks, or at most once a minute while the fax is sending. If they're signed in, `get_fax` with the fax's `id` also gives the documents' file names and the fax's history.
 
 - `document_errors` lists files Faxette couldn't use. Tell the person what's wrong; they fix it on the status page.
 - `checkout_available: true` means the person can pay on the status page.
 - A `failed` fax with `failure_reason: wrong_number` means no fax machine answered. If `resend_by` is set, the person can correct the fax number on the status page and send it again until then.
+
+## Their faxes
+
+When a signed-in person asks about faxes they've sent, use `get_faxes`. It returns 25 at a time, newest first: pass `next_page` back as `page` for more, and filter with `status`, like `["failed"]`. Use `get_account` to see which account they signed in with.
 
 ## Privacy
 
