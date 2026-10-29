@@ -65,7 +65,7 @@ Nothing is sent or charged from the chat. The person pays on the status page, wh
 ## Privacy and support
 
 - Privacy policy: [faxette.com/legal/privacy](https://www.faxette.com/legal/privacy)
-- Terms: [faxette.com/legal/terms](https://www.faxette.com/legal/terms)
+- Terms: [faxette.com/legal/terms](https://faxette.com/legal/terms)
 - Support: [support@faxette.com](mailto:support@faxette.com)
 
 ## Publishing
