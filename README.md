@@ -37,7 +37,7 @@ Claude, ChatGPT and other MCP clients can connect directly, without the skill. E
 | `https://mcp.faxette.com/mcp` | the US and Canada |
 | `https://mcp.eu.faxette.com/mcp` | the EU, the UK, Switzerland, Norway, Iceland, Liechtenstein, Monaco, Montenegro, Ukraine and the Isle of Man |
 
-Setup steps for each app are on [faxette.com/mcp](https://www.faxette.com/mcp).
+Setup steps for each app are on [faxette.com/mcp](https://faxette.com/mcp).
 
 ## What's inside
 
@@ -67,7 +67,7 @@ Nothing is sent or charged from the chat. The person pays on the status page, wh
 
 ## Privacy and support
 
-- Privacy policy: [faxette.com/legal/privacy](https://www.faxette.com/legal/privacy)
+- Privacy policy: [faxette.com/legal/privacy](https://faxette.com/legal/privacy)
 - Terms: [faxette.com/legal/terms](https://faxette.com/legal/terms)
 - Support: [support@faxette.com](mailto:support@faxette.com)
 

@@ -1,13 +1,13 @@
 {
   "name": "faxette",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Send a fax: your agent finds the official fax number, uploads your files and gives you a link to check the fax and pay.",
   "author": {
     "name": "Faxette",
     "email": "support@faxette.com",
-    "url": "https://www.faxette.com"
+    "url": "https://faxette.com"
   },
-  "homepage": "https://www.faxette.com/mcp",
+  "homepage": "https://faxette.com/mcp",
   "repository": "https://github.com/goosegods/faxette-plugins",
   "license": "MIT",
   "keywords": [
