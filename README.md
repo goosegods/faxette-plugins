@@ -68,6 +68,7 @@ Nothing is sent or charged without the person's agreement. Guests pay on the sta
 
 ## Privacy and support
 
+- Files you send go straight from your computer to Faxette's file storage: `create_document` returns a short-lived upload link and the skill uploads the file to it. Everything else goes through Faxette's MCP servers.
 - Privacy policy: [faxette.com/legal/privacy](https://faxette.com/legal/privacy)
 - Terms: [faxette.com/legal/terms](https://faxette.com/legal/terms)
 - Support: [support@faxette.com](mailto:support@faxette.com)
@@ -84,7 +85,7 @@ mcp-publisher login dns --domain faxette.com --private-key <key>
 (cd registry/eu && mcp-publisher publish)
 ```
 
-The key is the hex Ed25519 private key in the GooseGods Cloudflare Secrets Store, `faxette-MCP_REGISTRY_PRIVATE_KEY`. To replace it, make a new key and swap the `v=MCPv1` TXT record on `faxette.com` for the new public key:
+The key is the hex Ed25519 private key for the `v=MCPv1` record. To replace it, make a new key and swap the `v=MCPv1` TXT record on `faxette.com` for the new public key:
 
 ```sh
 openssl genpkey -algorithm Ed25519 -out key.pem
