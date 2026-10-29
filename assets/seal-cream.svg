@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="none">
+  <title>Faxette</title>
+  <defs>
+    <clipPath id="seal-boundary">
+      <circle cx="128" cy="128" r="112" />
+    </clipPath>
+    <mask id="goose-cutout" maskUnits="userSpaceOnUse" x="0" y="0" width="256" height="256">
+      <rect width="256" height="256" fill="white" />
+      <path d="M101 240C91 218 84 198 77 178C69 157 64 137 63 119L49 108L70 100L56 87L81 79C94 54 114 43 137 48C154 52 165 64 174 76C183 85 195 93 208 101C214 105 212 110 207 110L174 110C154 111 138 121 130 134C122 147 126 158 138 172C153 190 170 209 175 232C152 241 125 245 101 240Z" fill="black" />
+      <circle cx="140" cy="70" r="6" fill="white" />
+    </mask>
+  </defs>
+  <g id="seal">
+    <circle id="disc" cx="128" cy="128" r="112" fill="#f8f3e8" mask="url(#goose-cutout)" />
+    <path id="goose" d="M101 240C91 218 84 198 77 178C69 157 64 137 63 119L49 108L70 100L56 87L81 79C94 54 114 43 137 48C154 52 165 64 174 76C183 85 195 93 208 101C214 105 212 110 207 110L174 110C154 111 138 121 130 134C122 147 126 158 138 172C153 190 170 209 175 232C152 241 125 245 101 240Z" fill="none" clip-path="url(#seal-boundary)" />
+    <circle id="eye" cx="140" cy="70" r="6" fill="#f8f3e8" />
+  </g>
+</svg>

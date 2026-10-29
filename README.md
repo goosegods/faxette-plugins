@@ -1,4 +1,7 @@
-<img src="plugins/faxette/assets/icon.png" alt="Faxette" width="96" height="96">
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="assets/seal-cream.svg">
+  <img src="assets/seal-ink.svg" alt="Faxette" width="96" height="96">
+</picture>
 
 # Faxette plugins
 
