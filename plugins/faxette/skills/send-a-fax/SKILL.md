@@ -10,9 +10,9 @@ This plugin has two Faxette MCP servers with the same tools. Use the one that co
 - `faxette` for the US and Canada
 - `faxette-eu` for the EU, the UK, Switzerland, Norway, Iceland, Liechtenstein, Monaco, Montenegro, Ukraine and the Isle of Man
 
-Faxette doesn't fax anywhere else yet. The person pays on Faxette's status page, never in this chat.
+Faxette doesn't fax anywhere else yet. The person pays on Faxette's status page. If they're signed in and have credit, they can instead send it from their credit once they agree to the price (step 5).
 
-Sending a fax doesn't need an account. People with a Faxette account can sign in so their faxes stay in it: `get_account`, `get_faxes` and `get_fax` need that, and calling one while they aren't signed in asks your app to sign them in. Accounts belong to one server: an account on `faxette` doesn't work on `faxette-eu`.
+Sending a fax doesn't need an account. People with a Faxette account can sign in so their faxes stay in it: `get_account`, `get_faxes`, `get_fax` and `send_fax` need that, and calling one while they aren't signed in asks your app to sign them in. Accounts belong to one server: an account on `faxette` doesn't work on `faxette-eu`.
 
 ## 1. Find and confirm the fax number
 
@@ -48,11 +48,23 @@ If you can't read the files, skip this step and tell the person they'll add thei
 
 ## 4. Start the fax
 
-Call `create_fax` with the fax number, the email (unless they're signed in) and the `document_id`s in order. Give the person the `status_url`. They check the fax number, documents and price there, and pay to send it. Nothing is sent or charged until they do.
+Call `create_fax` with the fax number, the email (unless they're signed in) and the `document_id`s in order. Give the person the `status_url`. They check the fax number, documents and price there, and pay to send it. Nothing is sent or charged until they do, unless they're signed in and choose to send it from their credit (step 5).
 
 Never say a fax is sent or paid until `get_fax_status` or `get_fax` says so.
 
-## 5. Check on it
+## 5. Send it from credit
+
+Only when the person is signed in and asks to send from their credit:
+
+1. Call `get_fax` with the fax's `id`. Its `status` must be `documents_ready`.
+2. Call `get_account`. If their credit doesn't cover the fax's `credit_price`, give them the `status_url` instead, where they can buy credit or pay by card.
+3. Tell them the `credit_price` and that it comes from their credit, and wait for a clear yes.
+4. On `faxette-eu`, also tell them sending starts right away and their right to cancel ends once the fax is delivered, and get their explicit agreement to that. Agreeing to the price isn't enough. Then pass `immediate_sending_consent: true`.
+5. Call `send_fax` with the `id` and the `credit_price` `amount_cents` they agreed to.
+
+If `send_fax` answers `price_changed`, call `get_fax` again and confirm the new price. If it answers `guest_fax`, the fax was started without signing in: give them the `status_url` to pay by card, or start a new fax now that they're signed in.
+
+## 6. Check on it
 
 Call `get_fax_status` on the same server, with the `status_url`, only when the person asks, or at most once a minute while the fax is sending. If they're signed in, `get_fax` with the fax's `id` also gives the documents' file names and the fax's history.
 
