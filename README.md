@@ -78,6 +78,14 @@ mcp-publisher login dns --domain faxette.com --private-key <key>
 (cd registry/eu && mcp-publisher publish)
 ```
 
+The key is the hex Ed25519 private key in the GooseGods Cloudflare Secrets Store, `faxette-MCP_REGISTRY_PRIVATE_KEY`. To replace it, make a new key and swap the `v=MCPv1` TXT record on `faxette.com` for the new public key:
+
+```sh
+openssl genpkey -algorithm Ed25519 -out key.pem
+echo "v=MCPv1; k=ed25519; p=$(openssl pkey -in key.pem -pubout -outform DER | tail -c 32 | base64)"  # the TXT record
+openssl pkey -in key.pem -outform DER | tail -c 32 | xxd -p -c 64                                  # the hex key for login
+```
+
 ## License
 
 MIT
