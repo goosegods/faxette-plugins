@@ -1,3 +1,5 @@
+<img src="plugins/faxette/assets/icon.png" alt="Faxette" width="96" height="96">
+
 # Faxette plugins
 
 Send a fax from Claude Code or Codex. The plugin adds Faxette's two MCP servers, one for each copy of Faxette, and a `send-a-fax` skill: your agent finds the official fax number, uploads your files and gives you a link to Faxette's status page, where you check the fax and pay to send it. You pay per fax, with no subscription. You don't need an account; if you have one, sign in when your app asks and your faxes stay in it.
