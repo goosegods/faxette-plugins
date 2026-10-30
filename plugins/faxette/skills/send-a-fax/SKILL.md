@@ -10,13 +10,13 @@ This plugin has two Faxette MCP servers with the same tools. Use the one that co
 - `faxette` for the US and Canada
 - `faxette-eu` for the EU, the UK, Switzerland, Norway, Iceland, Liechtenstein, Monaco, Montenegro, Ukraine and the Isle of Man
 
-Faxette doesn't fax anywhere else yet. The person pays on Faxette's status page. If they're signed in and have credit, they can instead send it from their credit once they agree to the price (step 5).
+Faxette doesn't fax anywhere else yet. `get_capabilities` lists each server's countries, languages, file limits and prices. The person pays on Faxette's status page. If they're signed in and have credit, they can instead send it from their credit once they approve the exact fax and its price (step 5).
 
-Sending a fax doesn't need an account. People with a Faxette account can sign in so their faxes stay in it: `get_account`, `get_faxes`, `get_fax` and `send_fax` need that, and calling one while they aren't signed in asks your app to sign them in. Accounts belong to one server: an account on `faxette` doesn't work on `faxette-eu`.
+Sending a fax doesn't need an account. People with a Faxette account can sign in so their faxes stay in it: `get_account`, `get_faxes`, `get_fax`, `open_fax_review` and `send_fax` need that, and calling one while they aren't signed in asks your app to sign them in. Accounts belong to one server: an account on `faxette` doesn't work on `faxette-eu`.
 
 ## 1. Find and confirm the fax number
 
-Find the fax number on the official source, such as the agency's or office's own website, never a directory or a search snippet. Show the person the number and the page it came from, and have them confirm it before you call `create_fax`. Pass it in international format, like `+14155552671`.
+Look the office up with `lookup_fax_number` first: it searches Faxette's checked directory and returns each number with its official source and the date it was checked. If it finds nothing, find the number on the official source, such as the agency's or office's own website, never a directory or a search snippet. Either way, show the person the number and where it came from, and have them confirm it before you call `create_fax`. Pass it in international format, like `+14155552671`.
 
 If a form needs a handwritten signature, tell the person to print, sign and scan it before you upload it.
 
@@ -44,11 +44,19 @@ Faxette takes PDFs and photos saved as JPG, PNG, WEBP or HEIC, up to 20 MB each 
 
 4. Keep the `document_id` for `create_fax`.
 
-If you can't read the files, skip this step and tell the person they'll add their files on the status page.
+If you can't read the files, skip this step and tell the person they'll add their files on the review page or status page.
+
+To fax a letter or note you wrote together, pass it to `create_fax` as `content` (plain text or Markdown, up to 50,000 characters) instead of uploading a file. Faxette prints it as the first pages of the fax. Agree the wording with the person first.
 
 ## 4. Start the fax
 
-Call `create_fax` with the fax number, the email (unless they're signed in) and the `document_id`s in order. Give the person the `status_url`. They check the fax number, documents and price there, and pay to send it. Nothing is sent or charged until they do, unless they're signed in and choose to send it from their credit (step 5).
+Call `create_fax` with the fax number, the email (unless they're signed in) and the `document_id`s in order. Also pass:
+
+- `idempotency_key`: a new random UUID for each fax. If the call times out or answers `request_in_progress`, call it again with the same key and the same details. Never change the key to retry, or you'll start a second fax.
+- `cover_page`, only if the person asks for one, with wording they've confirmed. It counts toward the pages and the price.
+- `language`, if the person wants Faxette's pages and emails in another language this server offers.
+
+Apps that can show interactive screens open Faxette's review screen, where the person adds files and sees the exact PDF that will be faxed. Otherwise give them the `status_url`, or the `review_url` when there is one (it works for 30 minutes). They check the fax number, documents and price there, and pay to send it. Nothing is sent or charged until they do, unless they're signed in and choose to send it from their credit (step 5).
 
 Never say a fax is sent or paid until `get_fax_status` or `get_fax` says so.
 
@@ -56,13 +64,13 @@ Never say a fax is sent or paid until `get_fax_status` or `get_fax` says so.
 
 Only when the person is signed in and asks to send from their credit:
 
-1. Call `get_fax` with the fax's `id`. Its `status` must be `documents_ready`.
+1. Call `get_fax` with the fax's `id`. Its `status` must be `documents_ready`. Keep its `credit_quote`.
 2. Call `get_account`. If their credit doesn't cover the fax's `credit_price`, give them the `status_url` instead, where they can buy credit or pay by card.
-3. Tell them the `credit_price` and that it comes from their credit, and wait for a clear yes.
+3. Show them the exact prepared PDF with `open_fax_review`, or its `review_url`. Tell them the fax number, the documents, the `credit_price` and that it comes from their credit, and wait for a clear yes. A price alone isn't approval: they have to see what will be faxed.
 4. On `faxette-eu`, also tell them sending starts right away and their right to cancel ends once the fax is delivered, and get their explicit agreement to that. Agreeing to the price isn't enough. Then pass `immediate_sending_consent: true`.
-5. Call `send_fax` with the `id` and the `credit_price` `amount_cents` they agreed to.
+5. Call `send_fax` with the `id`, the `credit_quote` as `quote` and the `credit_price` `amount_cents` they agreed to.
 
-If `send_fax` answers `price_changed`, call `get_fax` again and confirm the new price. If it answers `guest_fax`, the fax was started without signing in: give them the `status_url` to pay by card, or start a new fax now that they're signed in.
+The quote covers the exact number, PDF and price they approved, and lasts 30 minutes. If `send_fax` answers `quote_changed`, `quote_required` or `price_changed`, something changed or the quote expired: call `get_fax` again, show the new PDF and price, and get a fresh yes. If it answers `guest_fax`, the fax was started without signing in: give them the `status_url` to pay by card, or start a new fax now that they're signed in.
 
 ## 6. Check on it
 
@@ -70,7 +78,11 @@ Call `get_fax_status` on the same server, with the `status_url`, only when the p
 
 - `document_errors` lists files Faxette couldn't use. Tell the person what's wrong; they fix it on the status page.
 - `checkout_available: true` means the person can pay on the status page.
-- A `failed` fax with `failure_reason: wrong_number` means no fax machine answered. If `resend_by` is set, the person can correct the fax number on the status page and send it again until then.
+- A `failed` fax with `failure_reason: wrong_number` means no fax machine answered. If `resend_by` is set, it can be sent again until then.
+
+To resend a failed fax, check it with `get_fax` or `get_fax_status`, confirm the fax number with the person (and any corrected number), then call `resend_fax`. It uses the same fax and payment, not a new one.
+
+When the person asks for proof of delivery, call `get_fax_report`. Its links work for 5 minutes. A delivered fax means the machine received it, not that someone read it.
 
 ## Their faxes
 

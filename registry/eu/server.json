@@ -3,7 +3,7 @@
   "name": "com.faxette/faxette-eu",
   "title": "Faxette EU",
   "description": "Send a fax to the EU, the UK, Switzerland and more of Europe from a chat. Pay per fax on Faxette.",
-  "version": "0.3.0",
+  "version": "0.5.0",
   "websiteUrl": "https://eu.faxette.com/mcp",
   "repository": {
     "url": "https://github.com/goosegods/faxette-plugins",

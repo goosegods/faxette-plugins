@@ -63,17 +63,22 @@ Setup steps for each app are on [faxette.com/mcp](https://faxette.com/mcp).
 
 | Tool | What it does |
 | --- | --- |
+| `get_capabilities` | Each copy's countries, languages, file limits and prices |
+| `lookup_fax_number` | Searches Faxette's checked directory for an office's fax number, with its official source |
 | `create_document` | Reserves an upload for one file (PDF, JPG, PNG, WEBP or HEIC, up to 20 MB) and returns a URL to PUT it to |
-| `create_fax` | Creates the fax and returns its `status_url`, where the person checks it and pays |
+| `create_fax` | Creates the fax, optionally with text or Markdown printed as pages and a cover page, and returns its `status_url`, where the person checks it and pays |
 | `get_fax_status` | Reads a fax from its `status_url`: status, pages, price, payment and attempts |
+| `resend_fax` | Resends a failed fax, optionally to a corrected number, with the same payment |
+| `get_fax_report` | A delivery report for a finished fax |
 | `get_account` | Shows which Faxette account is signed in. Needs sign-in |
 | `get_faxes` | Lists the account's faxes, 25 at a time, newest first, with a status filter. Needs sign-in |
-| `get_fax` | One of the account's faxes, with its documents' file names and history. Needs sign-in |
-| `send_fax` | Sends one of the account's faxes, paid from its credit, once the person agrees to the price. Needs sign-in |
+| `get_fax` | One of the account's faxes, with its documents' file names, history and the quote to approve. Needs sign-in |
+| `open_fax_review` | Shows the exact PDF that will be faxed, in apps that can show interactive screens, or as a review link. Needs sign-in |
+| `send_fax` | Sends one of the account's faxes, paid from its credit, once the person approves that exact fax and price. Needs sign-in |
 
 Signing in is optional. The connector asks your app to sign you in the first time a tool needs it, through your copy of Faxette (`www.faxette.com` or `eu.faxette.com`). Disconnect an app any time in Settings → Connected apps.
 
-Nothing is sent or charged without the person's agreement. Guests pay on the status page, which shows the fax number, documents and price first. Signed in, the agent can send a fax from the person's credit: it tells them the price and waits for their yes before calling `send_fax`.
+Nothing is sent or charged without the person's agreement. Guests pay on the status page, which shows the fax number, documents and price first. Signed in, the agent can send a fax from the person's credit: it shows them the exact PDF and price and waits for their yes before calling `send_fax`, and Faxette refuses the send if the fax or its price changed since.
 
 ## Privacy and support
 

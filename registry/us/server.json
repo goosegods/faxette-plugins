@@ -3,7 +3,7 @@
   "name": "com.faxette/faxette",
   "title": "Faxette",
   "description": "Send a fax to the US or Canada from a chat. The person checks it and pays per fax on Faxette.",
-  "version": "0.3.0",
+  "version": "0.5.0",
   "websiteUrl": "https://www.faxette.com/mcp",
   "repository": {
     "url": "https://github.com/goosegods/faxette-plugins",

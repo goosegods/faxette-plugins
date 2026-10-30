@@ -1,6 +1,6 @@
 {
   "name": "faxette",
-  "version": "0.3.0",
+  "version": "0.5.0",
   "description": "Send a fax: your agent finds the official fax number, uploads your files and gives you a link to check the fax and pay, or sends it from your credit once you agree to the price.",
   "author": {
     "name": "Faxette",
