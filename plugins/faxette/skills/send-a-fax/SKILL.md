@@ -1,18 +1,15 @@
 ---
 name: send-a-fax
-description: Send a fax with Faxette to the US, Canada, the EU, the UK, Switzerland or elsewhere in Europe, or check on one. Use when the person asks to fax a document or form, asks how a Faxette fax is doing, or asks about faxes they've sent.
+description: Send a fax with Faxette to the US, Canada, Mexico, Puerto Rico, Costa Rica, the EU, the UK, Switzerland or elsewhere in Europe, or check on one. Use when the person asks to fax a document or form, asks how a Faxette fax is doing, or asks about faxes they've sent.
 ---
 
 # Send a fax with Faxette
 
-This plugin has two Faxette MCP servers with the same tools. Use the one that covers the fax number's country for every step of that fax:
+This plugin adds Faxette's MCP server, `faxette`. It faxes to the US, Canada, Mexico, Puerto Rico, Costa Rica, the EU, the UK, Switzerland, Norway, Iceland, Liechtenstein, Monaco, Montenegro, Ukraine and the Isle of Man, through Faxette's US service or its European one. Without signing in, the fax number decides which: a fax to the US or Canada goes through the US service unless you pass `region: "eu"` to `create_document` and `create_fax`, which you do when the person is in Europe.
 
-- `faxette` for the US and Canada
-- `faxette-eu` for the EU, the UK, Switzerland, Norway, Iceland, Liechtenstein, Monaco, Montenegro, Ukraine and the Isle of Man
+Faxette doesn't fax anywhere else yet. `get_capabilities` lists each service's countries, languages, file limits and prices. The person pays on Faxette's status page. If they're signed in and have credit, they can instead send it from their credit once they approve the exact fax and its price (step 5).
 
-Faxette doesn't fax anywhere else yet. `get_capabilities` lists each server's countries, languages, file limits and prices. The person pays on Faxette's status page. If they're signed in and have credit, they can instead send it from their credit once they approve the exact fax and its price (step 5).
-
-Sending a fax doesn't need an account. People with a Faxette account can sign in so their faxes stay in it: `get_account`, `get_faxes`, `get_fax`, `open_fax_review` and `send_fax` need that, and calling one while they aren't signed in asks your app to sign them in. Accounts belong to one server: an account on `faxette` doesn't work on `faxette-eu`.
+Sending a fax doesn't need an account. People with a Faxette account can sign in so their faxes stay in it: `get_account`, `get_faxes`, `get_fax`, `open_fax_review` and `send_fax` need that, and calling one while they aren't signed in asks your app to sign them in. A signed-in account only faxes to its own service's countries: a US account to the US, Canada, Mexico, Puerto Rico and Costa Rica, and a European account to Europe, the US and Canada.
 
 ## 1. Find and confirm the fax number
 
@@ -67,7 +64,7 @@ Only when the person is signed in and asks to send from their credit:
 1. Call `get_fax` with the fax's `id`. Its `status` must be `documents_ready`. Keep its `credit_quote`.
 2. Call `get_account`. If their credit doesn't cover the fax's `credit_price`, give them the `status_url` instead, where they can buy credit or pay by card.
 3. Show them the exact prepared PDF with `open_fax_review`, or its `review_url`. Tell them the fax number, the documents, the `credit_price` and that it comes from their credit, and wait for a clear yes. A price alone isn't approval: they have to see what will be faxed.
-4. On `faxette-eu`, also tell them sending starts right away and their right to cancel ends once the fax is delivered, and get their explicit agreement to that. Agreeing to the price isn't enough. Then pass `immediate_sending_consent: true`.
+4. For a European account (`get_account` shows `region: "eu"`), also tell them sending starts right away and their right to cancel ends once the fax is delivered, and get their explicit agreement to that. Agreeing to the price isn't enough. Then pass `immediate_sending_consent: true`.
 5. Call `send_fax` with the `id`, the `credit_quote` as `quote` and the `credit_price` `amount_cents` they agreed to.
 
 The quote covers the exact number, PDF and price they approved, and lasts 30 minutes. If `send_fax` answers `quote_changed`, `quote_required` or `price_changed`, something changed or the quote expired: call `get_fax` again, show the new PDF and price, and get a fresh yes. If it answers `guest_fax`, the fax was started without signing in: give them the `status_url` to pay by card, or start a new fax now that they're signed in.

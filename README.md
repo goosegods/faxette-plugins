@@ -5,9 +5,9 @@
 
 # Faxette plugins
 
-Send a fax from Claude Code, Codex or GitHub Copilot. The plugin adds Faxette's two MCP servers, one for each copy of Faxette, and a `send-a-fax` skill: your agent finds the official fax number, uploads your files and gives you a link to Faxette's status page, where you check the fax and pay to send it. If you're signed in, it can instead send the fax from your Faxette credit once you agree to the price. You pay per fax, with no subscription. You don't need an account; if you have one, sign in when your app asks and your faxes stay in it.
+Send a fax from Claude Code, Codex or GitHub Copilot. The plugin adds Faxette's MCP server and a `send-a-fax` skill: your agent finds the official fax number, uploads your files and gives you a link to Faxette's status page, where you check the fax and pay to send it. If you're signed in, it can instead send the fax from your Faxette credit once you agree to the price. You pay per fax, with no subscription. You don't need an account; if you have one, sign in when your app asks and your faxes stay in it.
 
-Faxette faxes to the US, Canada, the EU, the UK, Switzerland, Norway, Iceland, Liechtenstein, Monaco, Montenegro, Ukraine and the Isle of Man.
+Faxette faxes to the US, Canada, Mexico, Puerto Rico, Costa Rica, the EU, the UK, Switzerland, Norway, Iceland, Liechtenstein, Monaco, Montenegro, Ukraine and the Isle of Man.
 
 ## Install
 
@@ -39,12 +39,7 @@ Then ask, for example: "Please fax referral.pdf to Dr. Lee's office."
 
 ## Only the connectors
 
-Claude, ChatGPT and other MCP clients can connect directly, without the skill. Each connector faxes to its own copy's countries:
-
-| Connector | Faxes to |
-| --- | --- |
-| `https://mcp.faxette.com/mcp` | the US and Canada |
-| `https://mcp.eu.faxette.com/mcp` | the EU, the UK, Switzerland, Norway, Iceland, Liechtenstein, Monaco, Montenegro, Ukraine and the Isle of Man |
+Claude, ChatGPT and other MCP clients can connect directly, without the skill, at `https://mcp.faxette.com/mcp`. It faxes to the US, Canada, Mexico, Puerto Rico, Costa Rica, the EU, the UK, Switzerland, Norway, Iceland, Liechtenstein, Monaco, Montenegro, Ukraine and the Isle of Man.
 
 Setup steps for each app are on [faxette.com/mcp](https://faxette.com/mcp).
 
@@ -53,11 +48,11 @@ Setup steps for each app are on [faxette.com/mcp](https://faxette.com/mcp).
 | Path | What it is |
 | --- | --- |
 | `plugins/faxette/skills/send-a-fax/SKILL.md` | How the agent finds the number, uploads files and hands over the status page |
-| `plugins/faxette/.mcp.json` | The two MCP servers, for Claude Code |
+| `plugins/faxette/.mcp.json` | The MCP server, for Claude Code |
 | `plugins/faxette/mcp.json`, `plugin.json` | The same plugin in the Agent Plugins format, for Codex and GitHub Copilot |
 | `.claude-plugin/marketplace.json` | The Claude Code and GitHub Copilot marketplace |
 | `.agents/plugins/marketplace.json` | The Codex marketplace |
-| `registry/us/server.json`, `registry/eu/server.json` | Each server's entry in the [MCP Registry](https://registry.modelcontextprotocol.io) |
+| `registry/server.json` | The server's entry in the [MCP Registry](https://registry.modelcontextprotocol.io) |
 
 ## Tools
 
@@ -76,7 +71,7 @@ Setup steps for each app are on [faxette.com/mcp](https://faxette.com/mcp).
 | `open_fax_review` | Shows the exact PDF that will be faxed, in apps that can show interactive screens, or as a review link. Needs sign-in |
 | `send_fax` | Sends one of the account's faxes, paid from its credit, once the person approves that exact fax and price. Needs sign-in |
 
-Signing in is optional. The connector asks your app to sign you in the first time a tool needs it, through your copy of Faxette (`www.faxette.com` or `eu.faxette.com`). Disconnect an app any time in Settings → Connected apps.
+Signing in is optional. The connector asks your app to sign you in the first time a tool needs it, through `www.faxette.com`, which sends European accounts on to `eu.faxette.com`. Disconnect an app any time in Settings → Connected apps.
 
 Nothing is sent or charged without the person's agreement. Guests pay on the status page, which shows the fax number, documents and price first. Signed in, the agent can send a fax from the person's credit: it shows them the exact PDF and price and waits for their yes before calling `send_fax`, and Faxette refuses the send if the fax or its price changed since.
 
@@ -91,12 +86,11 @@ Nothing is sent or charged without the person's agreement. Guests pay on the sta
 
 Bump `version` in both `plugin.json` files when the plugin changes.
 
-The servers are listed in the MCP Registry as `com.faxette/faxette` and `com.faxette/faxette-eu`. Bump `version` in both `registry/*/server.json` files with the server's, then publish each. The `com.faxette/*` names are proven with a DNS TXT record on `faxette.com` ([how](https://modelcontextprotocol.io/registry/authentication.md#dns-authentication)):
+The server is listed in the MCP Registry as `com.faxette/faxette`. Bump `version` in `registry/server.json` with the server's, then publish it. The `com.faxette/*` names are proven with a DNS TXT record on `faxette.com` ([how](https://modelcontextprotocol.io/registry/authentication.md#dns-authentication)):
 
 ```sh
 mcp-publisher login dns --domain faxette.com --private-key <key>
-(cd registry/us && mcp-publisher publish)
-(cd registry/eu && mcp-publisher publish)
+(cd registry && mcp-publisher publish)
 ```
 
 The key is the hex Ed25519 private key for the `v=MCPv1` record. To replace it, make a new key and swap the `v=MCPv1` TXT record on `faxette.com` for the new public key:
