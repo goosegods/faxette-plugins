@@ -1,6 +1,6 @@
 ---
 name: send-a-fax
-description: Send a fax with Faxette to the US, Canada, Mexico, Puerto Rico, Costa Rica, the EU, the UK, Switzerland or elsewhere in Europe, or check on one. Use when the person asks to fax a document or form, asks how a Faxette fax is doing, or asks about faxes they've sent.
+description: Send a fax with Faxette to the US, Canada, Mexico, Puerto Rico, Costa Rica, the EU, the UK, Switzerland or elsewhere in Europe, check on one, or read the faxes an organization received. Use when the person asks to fax a document or form, asks how a Faxette fax is doing, asks about faxes they've sent, or asks what came into their organization's inbox.
 ---
 
 # Send a fax with Faxette
@@ -9,7 +9,7 @@ This plugin adds Faxette's MCP server, `faxette`. It faxes to the US, Canada, Me
 
 Faxette doesn't fax anywhere else yet. `get_capabilities` lists each service's countries, languages, file limits and prices. The person pays on Faxette's status page. If they're signed in and have credit, they can instead send it from their credit once they approve the exact fax and its price (step 5).
 
-Sending a fax doesn't need an account. People with a Faxette account can sign in so their faxes stay in it: `get_account`, `get_faxes`, `get_fax`, `open_fax_review` and `send_fax` need that, and calling one while they aren't signed in asks your app to sign them in. A signed-in account only faxes to its own service's countries: a US account to the US, Canada, Mexico, Puerto Rico and Costa Rica, and a European account to Europe, the US and Canada.
+Sending a fax doesn't need an account. People with a Faxette account can sign in so their faxes stay in it: `get_account`, `get_faxes`, `get_fax`, `open_fax_review`, `send_fax` and the organization tools need that, and calling one while they aren't signed in asks your app to sign them in. A signed-in account only faxes to its own service's countries: a US account to the US, Canada, Mexico, Puerto Rico and Costa Rica, and a European account to Europe, the US and Canada.
 
 ## 1. Find and confirm the fax number
 
@@ -84,6 +84,32 @@ When the person asks for proof of delivery, call `get_fax_report`. Its links wor
 ## Their faxes
 
 When a signed-in person asks about faxes they've sent, use `get_faxes`. It returns 25 at a time, newest first: pass `next_page` back as `page` for more, and filter with `status`, like `["failed"]`. Use `get_account` to see which account they signed in with.
+
+## Organizations
+
+An office that uses Faxette as a team is an organization, with a fax number and an inbox. When the person connects your app, they pick which of their organizations it can use. `get_organizations` lists those, each with its `id`, the person's role, its plan and its fax numbers. Pass the `id` as `organization` to `create_fax`, `get_faxes`, `get_fax` and the inbox tools. If there are several and the person hasn't said which, ask; never guess. If the list is empty, they picked none: tell them to reconnect the app and select the organization. A connection made before organizations existed can't use them yet: the first inbox tool asks your app to connect again.
+
+### Send as an organization
+
+Follow steps 1 to 4 with `organization` on `create_fax`. Then, instead of step 5:
+
+1. Call `get_fax`. Its `payment_option` says how `send_fax` would pay: `plan`, when the organization's plan covers the fax at no charge, or `saved_card`, when `amount_cents` is held on the organization's card ending `card_last4` and charged once the fax is delivered.
+2. Show the person the exact prepared PDF with `open_fax_review` or its `review_url`, tell them which way it's paid, and wait for a clear yes.
+3. Call `send_fax` with the `id` and the `payment_method`, plus the `quote` for `saved_card`.
+
+If `payment_option` is null, the organization has neither a plan that covers the fax nor a card: an owner adds a card or starts a plan in Billing. If `send_fax` answers `payment_changed`, call `get_fax` again and confirm with the person again.
+
+### The inbox
+
+- `get_inbound_faxes` lists the faxes an organization received, 25 at a time, newest first, with who sent each, which number it came to and whether the person has read it. Pass `unread: true` for only the unread ones.
+- `get_inbound_fax` gives one fax's details and `pdf_url`, a link to its PDF for 5 minutes, for apps that can download files.
+- `read_inbound_fax` returns its pages as images, up to 10. Use it only when the person asks what a fax says or wants it summarized.
+
+Opening a fax either way marks it read for the person. A fax that arrived after the organization's plan ended stays locked until an owner restarts the plan, and a fax whose PDF was already deleted has no pages: both return their details only.
+
+### Blocking a sender
+
+`block_sender` blocks a number for the whole organization: pass `inbound_fax_id` for the number a received fax came from, or `number` for one the person gives you. Before calling it, confirm the number with the person and tell them that future faxes from it will be deleted as they arrive, and that nobody will be emailed. Faxes already in the inbox stay. `get_blocked_senders` lists the blocked numbers, and `unblock_sender` undoes a block.
 
 ## Privacy
 

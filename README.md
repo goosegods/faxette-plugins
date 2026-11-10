@@ -5,7 +5,7 @@
 
 # Faxette plugins
 
-Send a fax from Claude Code, Codex or GitHub Copilot. The plugin adds Faxette's MCP server and a `send-a-fax` skill: your agent finds the official fax number, uploads your files and gives you a link to Faxette's status page, where you check the fax and pay to send it. If you're signed in, it can instead send the fax from your Faxette credit once you agree to the price. You pay per fax, with no subscription. You don't need an account; if you have one, sign in when your app asks and your faxes stay in it.
+Send a fax from Claude Code, Codex or GitHub Copilot. The plugin adds Faxette's MCP server and a `send-a-fax` skill: your agent finds the official fax number, uploads your files and gives you a link to Faxette's status page, where you check the fax and pay to send it. If you're signed in, it can instead send the fax from your Faxette credit once you agree to the price. In an organization, it can also read the faxes your office received, block a sender, and send as the organization on its plan or card. You pay per fax, with no subscription. You don't need an account; if you have one, sign in when your app asks and your faxes stay in it.
 
 Faxette faxes to the US, Canada, Mexico, Puerto Rico, Costa Rica, the EU, the UK, Switzerland, Norway, Iceland, Liechtenstein, Monaco, Montenegro, Ukraine and the Isle of Man.
 
@@ -69,9 +69,16 @@ Setup steps for each app are on [faxette.com/mcp](https://faxette.com/mcp).
 | `get_faxes` | Lists the account's faxes, 25 at a time, newest first, with a status filter. Needs sign-in |
 | `get_fax` | One of the account's faxes, with its documents' file names, history and the quote to approve. Needs sign-in |
 | `open_fax_review` | Shows the exact PDF that will be faxed, in apps that can show interactive screens, or as a review link. Needs sign-in |
-| `send_fax` | Sends one of the account's faxes, paid from its credit, once the person approves that exact fax and price. Needs sign-in |
+| `send_fax` | Sends one of the account's faxes, paid from its credit, once the person approves that exact fax and price. For an organization's fax, pays with its plan or holds the amount on its card. Needs sign-in |
+| `get_organizations` | The organizations the person let the app use, with each one's plan and fax numbers. Needs sign-in |
+| `get_inbound_faxes` | Lists the faxes an organization received, 25 at a time, newest first, with an unread filter. Needs sign-in |
+| `get_inbound_fax` | One received fax, with a link to its PDF for 5 minutes. Marks it read. Needs sign-in |
+| `read_inbound_fax` | A received fax's pages as images, up to 10, to read or summarize it. Marks it read. Needs sign-in |
+| `get_blocked_senders` | Lists the numbers an organization blocked, 25 at a time. Needs sign-in |
+| `block_sender` | Blocks a number for the organization: its future faxes are deleted as they arrive, and nobody is emailed. Needs sign-in |
+| `unblock_sender` | Lets a blocked number's faxes reach the organization again. Needs sign-in |
 
-Signing in is optional. The connector asks your app to sign you in the first time a tool needs it, through `www.faxette.com`, which sends European accounts on to `eu.faxette.com`. Disconnect an app any time in Settings → Connected apps.
+Signing in is optional. The connector asks your app to sign you in the first time a tool needs it, through `www.faxette.com`, which sends European accounts on to `eu.faxette.com`. When you connect, you choose which of your organizations the app can use; reconnect to change that. Disconnect an app any time in Settings → Connected apps.
 
 Nothing is sent or charged without the person's agreement. Guests pay on the status page, which shows the fax number, documents and price first. Signed in, the agent can send a fax from the person's credit: it shows them the exact PDF and price and waits for their yes before calling `send_fax`, and Faxette refuses the send if the fax or its price changed since.
 
