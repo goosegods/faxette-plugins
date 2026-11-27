@@ -1,6 +1,6 @@
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="assets/seal-cream.svg">
-  <img src="assets/seal-ink.svg" alt="Faxette" width="96" height="96">
+  <source media="(prefers-color-scheme: dark)" srcset="assets/seal-cream.png">
+  <img src="assets/seal-ink.png" alt="Faxette" width="96" height="96">
 </picture>
 
 # Faxette plugins
